@@ -1,0 +1,51 @@
+{
+    "system_info": {
+        "timestamp": "2025-12-08T12:42:53.187545",
+        "mmdet3d": "1.4.0",
+        "gpu": "NVIDIA A100-PCIE-40GB",
+        "memory_gb": 250.84
+    },
+    "accuracy_metrics": {
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP11_easy_strict": 88.7664,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP11_easy_strict": 90.1821,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP11_easy_strict": 93.5893,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP11_moderate_strict": 78.4082,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP11_moderate_strict": 87.4024,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP11_moderate_strict": 89.9499,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP11_hard_strict": 77.2573,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP11_hard_strict": 85.4211,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP11_hard_strict": 89.3165,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP11_easy_loose": 95.6392,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP11_easy_loose": 95.6862,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP11_easy_loose": 93.5893,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP11_moderate_loose": 90.053,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP11_moderate_loose": 90.0888,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP11_moderate_loose": 89.9499,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP11_hard_loose": 89.5583,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP11_hard_loose": 89.6506,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP11_hard_loose": 89.3165,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP40_easy_strict": 90.7809,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP40_easy_strict": 94.5407,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP40_easy_strict": 97.4618,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP40_moderate_strict": 79.905,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP40_moderate_strict": 88.0555,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP40_moderate_strict": 93.2398,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP40_hard_strict": 78.2078,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP40_hard_strict": 86.6407,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP40_hard_strict": 91.0524,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP40_easy_loose": 98.0671,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP40_easy_loose": 98.1158,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP40_easy_loose": 97.4618,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP40_moderate_loose": 94.3559,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP40_moderate_loose": 94.3018,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP40_moderate_loose": 93.2398,
+        "Kitti metric/pred_instances_3d/KITTI/Car_3D_AP40_hard_loose": 93.2573,
+        "Kitti metric/pred_instances_3d/KITTI/Car_BEV_AP40_hard_loose": 93.5185,
+        "Kitti metric/pred_instances_3d/KITTI/Car_2D_AP40_hard_loose": 91.0524
+    },
+    "performance_metrics": {
+        "mean_latency_ms": 51.64183187576465,
+        "std_latency_ms": 55.21673650382086,
+        "max_peak_mem_mb": 33577.5517578125
+    }
+}
