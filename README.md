@@ -5,7 +5,7 @@
 ## Repo Layout
 - `detection3d/`: lightly modified `simple_infer_main.py` + helpers from the Professor Kaikai Liu's repo
 - `logs/`: stdout/stderr from every evaluation and visualization run
-- `results/`: benchmark JSON metrics, and demo video + screenshots in dataset_model_viz subfolders
+- `results/`: benchmark JSON metrics in eval folder, and demo video + screenshots
 - `open3d_view_saved_ply.py`: modified viewer script from the Professor Kaikai Liu's repo
 - `mmdetection3d_env.yaml`: conda spec for reproducing the working environment
 - `report.md`: concise 1–2 page write-up summarizing setup, metrics, visuals, and takeaways
@@ -94,12 +94,12 @@ python detection3d/simple_infer_main.py \
 ```
 Executed combinations (logs live in `logs/` and artifacts in `results/`):
 
-| Dataset | Model | Config | Checkpoint | Eval out/log | Viz out/log | Notes |
-| --- | --- | --- | --- | --- | --- | --- |
-| KITTI | 3DSSD | `3dssd_4x4_kitti-3d-car.py` | `3dssd_4x4_kitti-3d-car_20210818_203828-b89c8fc4.pth` | `results/kitti_3dssd_eval` / `logs/kitti_3dssd_eval.log` | `results/kitti_3dssd_viz` / `logs/kitti_3dssd_viz.log` | Saved 200 samples with .ply/.json. |
-| KITTI | PointPillars | `pointpillars_hv_secfpn_8xb6-160e_kitti-3d-car.py` | `hv_pointpillars_secfpn_6x8_160e_kitti-3d-car_20220331_134606-d42d15ed.pth` | `results/kitti_pointpillars_eval` / `logs/kitti_pointpillars_eval.log` | `results/kitti_pointpillars_viz` / `logs/kitti_pointpillars_viz.log` | Fast baseline for FPS comparison. |
-| NuScenes | PointPillars | `pointpillars_hv_secfpn_sbn-all_8xb4-2x_nus-3d.py` | `hv_pointpillars_secfpn_sbn-all_4x8_2x_nus-3d_20210826_225857-f19d00a3.pth` | `results/nuscenes_pointpillars_eval` / `logs/nuscenes_pointpillars_eval.log` | `results/nuscenes_pointpillars_viz` / `logs/nuscenes_pointpillars_viz.log` | Add `--no-save-images` to avoid `KeyError: 'lidar2img'`. |
-| NuScenes | CenterPoint | `centerpoint_pillar02_second_secfpn_head-circlenms_8xb4-cyclic-20e_nus-3d.py` | `centerpoint_02pillar_second_secfpn_circlenms_4x8_cyclic_20e_nus_20220811_031844-191a3822.pth` | `results/nuscenes_centerpoint_eval` / `logs/nuscenes_centerpoint_eval.log` | `results/nuscenes_centerpoint_viz` / `logs/nuscenes_centerpoint_viz.log` | Also run with `--no-save-images`. |
+| Dataset | Model | Config | Checkpoint | Eval out/log | Viz out/log |
+| --- | --- | --- | --- | --- | --- |
+| KITTI | 3DSSD | `3dssd_4x4_kitti-3d-car.py` | `3dssd_4x4_kitti-3d-car_20210818_203828-b89c8fc4.pth` | `results/kitti_3dssd_eval` / `logs/kitti_3dssd_eval.log` | `results/kitti_3dssd_viz` / `logs/kitti_3dssd_viz.log` |
+| KITTI | PointPillars | `pointpillars_hv_secfpn_8xb6-160e_kitti-3d-car.py` | `hv_pointpillars_secfpn_6x8_160e_kitti-3d-car_20220331_134606-d42d15ed.pth` | `results/kitti_pointpillars_eval` / `logs/kitti_pointpillars_eval.log` | `results/kitti_pointpillars_viz` / `logs/kitti_pointpillars_viz.log` |
+| NuScenes | PointPillars | `pointpillars_hv_secfpn_sbn-all_8xb4-2x_nus-3d.py` | `hv_pointpillars_secfpn_sbn-all_4x8_2x_nus-3d_20210826_225857-f19d00a3.pth` | `results/nuscenes_pointpillars_eval` / `logs/nuscenes_pointpillars_eval.log` | `results/nuscenes_pointpillars_viz` / `logs/nuscenes_pointpillars_viz.log` |
+| NuScenes | CenterPoint | `centerpoint_pillar02_second_secfpn_head-circlenms_8xb4-cyclic-20e_nus-3d.py` | `centerpoint_02pillar_second_secfpn_circlenms_4x8_cyclic_20e_nus_20220811_031844-191a3822.pth` | `results/nuscenes_centerpoint_eval` / `logs/nuscenes_centerpoint_eval.log` | `results/nuscenes_centerpoint_viz` / `logs/nuscenes_centerpoint_viz.log` |
 
 All inference runs used `--max-samples 200` to keep artifact folders manageable while still satisfying the ≥200 frame requirement for the stitched video.
 
@@ -119,12 +119,6 @@ python open3d_view_saved_ply.py \
 cd results/<*_viz>/frames
 ffmpeg -framerate 7 -i frame_%04d.png -c:v libx264 -pix_fmt yuv420p demo.mp4
 ```
-
-## Deliverables Checklist
-- `report.md` (setup summary, command references, metrics table, screenshot & video placeholders)
-- `results/` (benchmark JSON, `.ply`, `.json`, `.png`, and `demo.mp4` once rendered)
-- Updated source under `detection3d/` with any code tweaks clearly commented
-- Local Open3D screenshots embedded in the report after capture
 
 ## Troubleshooting Notes
 - NuScenes inference raises `KeyError: 'lidar2img'` when `--save-images` is enabled; rerun with `--no-save-images` or augment the metadata dict in `simple_infer_utils.py` before enabling captures.
