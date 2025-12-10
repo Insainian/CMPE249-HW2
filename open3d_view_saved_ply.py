@@ -117,7 +117,6 @@ def main():
         return
 
     print("\n[INFO] Opening viewer. Controls: mouse to rotate, scroll to zoom, 'Q' to exit.")
-    # MODIFIED (till bottom of file): Capturing screenshot automatically
     vis = o3d.visualization.Visualizer()
     vis.create_window(
         window_name=f"PLY Viewer: {base}",
@@ -168,7 +167,7 @@ def main():
     vis.update_renderer()
 
 
-
+    # MODIFIED: Capture screenshot automatically
     screenshot_dir = os.path.join(base_dir, "screenshots")
     os.makedirs(screenshot_dir, exist_ok=True)
 

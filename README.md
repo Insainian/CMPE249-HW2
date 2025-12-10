@@ -1,14 +1,14 @@
 # CMPE249-HW2
 
-> 3D object detection eval/inference workflows for CMPE 249 HW2. Uses MMDetection3D framework with lightly modified inference script.
-> 
+> 3D object detection eval/inference workflows for CMPE 249 HW2. Uses MMDetection3D framework with slightly modified inference script from Professor Kaikai Liu.
+> I've put a comment # MODIFIED: ... in the code where I made changes.
 ## Repo Layout
 - `detection3d/`: lightly modified `simple_infer_main.py` + helpers from the Professor Kaikai Liu's repo
 - `logs/`: stdout/stderr from every evaluation and visualization run
 - `results/`: benchmark JSON metrics in eval folder, and demo video + screenshots
 - `open3d_view_saved_ply.py`: modified viewer script from the Professor Kaikai Liu's repo
 - `mmdetection3d_env.yaml`: conda spec for reproducing the working environment
-- `report.md`: concise 1–2 page write-up summarizing setup, metrics, visuals, and takeaways
+- `report.md`: write-up summarizing setup, metrics, visuals, and takeaways
 
 ## Environment Setup
 ### Quickstart (local workstation, container, or lab GPU node)
@@ -71,8 +71,13 @@ PYTHONPATH=. python tools/create_data.py nuscenes \
   --extra-tag nuscenes
 ```
 
+3. Download pretrained model checkpoints from MMDetection3D model zoo:
+```bash
+mim download mmdet3d --config <config-name> --dest $M3D/modelzoo_mmdetection3d
+```
+
 ## Running Evaluation & Inference
-Set helper env vars for brevity:
+Set helper env vars:
 ```bash
 export HWREPO=/fs/atipa/home/<student_id>/CMPE249-HW2
 export M3D=/home/<student_id>/mmdetection3d
@@ -110,7 +115,7 @@ All inference runs used `--max-samples 200` to keep artifact folders manageable 
 python open3d_view_saved_ply.py \
   --dir results/<*_viz> \
   --view-json   results/<*_viz>/view.json \
-  --basename <frame#> # e.g., 0 for 0_point.ply and 0_pred.ply
+  --basename <frame#> # e.g. 0 for 0_point.ply and 0_pred.ply
 ```
 3. To get the JSON, run without --view-json first to generate it. Move it around in the pop-up window to get a good view, then press H to see
    the commands. Usually it will be command/ctrl c to copy the view settings to clipboard. Paste it into a file named view.json
@@ -124,4 +129,4 @@ ffmpeg -framerate 7 -i frame_%04d.png -c:v libx264 -pix_fmt yuv420p demo.mp4
 - NuScenes inference raises `KeyError: 'lidar2img'` when `--save-images` is enabled; rerun with `--no-save-images` or augment the metadata dict in `simple_infer_utils.py` before enabling captures.
 - Reinstalling MMCV from source (instructions above) resolved CUDA 12.6 compatibility issues on HPC1.
 
-Refer to `report.md` for the latest metrics table and qualitative analysis.
+Refer to `report.md` for the metrics table and qualitative analysis.
