@@ -19,6 +19,7 @@ On macOS, install Open3D via:
 import argparse
 import os
 import sys
+import numpy as np
 
 try:
     import open3d as o3d
@@ -69,14 +70,21 @@ def main():
     # MODIFIED: Added single color to the point cloud for better visibility
     pcd = load_if_exists(points_path, o3d.io.read_point_cloud, "Point cloud")
     if pcd is not None:
-        pcd.paint_uniform_color([0.7, 0.7, 0.7])  # light gray
+        # pcd.paint_uniform_color([0.7, 0.7, 0.7])  # light gray
         geoms.append(pcd)
 
-    # MODIFIED: Added prediction point cloud to geom and colored it red
-    pred = load_if_exists(pred_path, o3d.io.read_point_cloud, "Predictions")
+    # MODIFIED: Added prediction boxes with purple color
+    pred = load_if_exists(pred_path, o3d.io.read_line_set, "Predicted boxes")
     if pred is not None:
-        pred.paint_uniform_color([1.0, 0.0, 0.0])  # red
+        # Bright purple for all box edges
+        purple = np.array([1.0, 0.0, 1.0], dtype=float)
+        num_lines = len(pred.lines)
+        if num_lines > 0:
+            pred.colors = o3d.utility.Vector3dVector(
+                np.tile(purple, (num_lines, 1))
+            )
         geoms.append(pred)
+
 
     axes = load_if_exists(axes_path, o3d.io.read_triangle_mesh, "Coordinate axes")
     if axes is not None:
