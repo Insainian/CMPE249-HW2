@@ -1,19 +1,19 @@
 # CMPE249-HW2
 
-> 3D object detection eval/inference workflows for CMPE 249 HW2. This repo tracks the commands, logs, and artifacts required by the assignment deliverables.
-
+> 3D object detection eval/inference workflows for CMPE 249 HW2. Uses MMDetection3D framework with lightly modified inference script.
+> 
 ## Repo Layout
-- `detection3d/`: lightly modified `simple_infer_main.py` + helpers from the starter repo
+- `detection3d/`: lightly modified `simple_infer_main.py` + helpers from the Professor Kaikai Liu's repo
 - `logs/`: stdout/stderr from every evaluation and visualization run
-- `results/`: benchmark JSON metrics, saved .ply/.png outputs, and (TODO) demo video + screenshots
-- `open3d_view_saved_ply.py`: local viewer script from the starter repo
-- `mmdetection3d_env.yaml`: frozen conda spec for reproducing the working environment
+- `results/`: benchmark JSON metrics, and demo video + screenshots in dataset_model_viz subfolders
+- `open3d_view_saved_ply.py`: modified viewer script from the Professor Kaikai Liu's repo
+- `mmdetection3d_env.yaml`: conda spec for reproducing the working environment
 - `report.md`: concise 1–2 page write-up summarizing setup, metrics, visuals, and takeaways
 
 ## Environment Setup
 ### Quickstart (local workstation, container, or lab GPU node)
 ```bash
-# clone both repos if needed
+# clone both repos
 # git clone <this repo>
 # git clone https://github.com/open-mmlab/mmdetection3d.git $HOME/mmdetection3d
 
@@ -59,8 +59,8 @@ pip install -v . --no-build-isolation --no-deps
 Once `python demo/pcd_demo.py demo/data/kitti/000008.bin` succeeds inside `~/mmdetection3d`, the rest of the homework scripts work.
 
 ## Dataset Preparation
-1. Stage datasets under `$M3D/data/` (shared NFS paths on HPC already contain KITTI and NuScenes).
-2. For NuScenes, regenerate sweeps/info files to avoid stale metadata:
+1. Stage datasets under `$M3D/data/` (shared class paths on HPC already contain KITTI and NuScenes).
+2. For NuScenes, there was no sweeps files so had to use my locally downloaded NuScenes. Needed to regenerate the info files to avoid stale metadata:
 ```bash
 cd $M3D
 conda activate mmdetection3d
@@ -70,13 +70,12 @@ PYTHONPATH=. python tools/create_data.py nuscenes \
   --out-dir   ./data/nuscenes \
   --extra-tag nuscenes
 ```
-3. Ensure the shared NuScenes `sweeps/` folder is populated (copied from local cache when the shared copy was empty).
 
 ## Running Evaluation & Inference
 Set helper env vars for brevity:
 ```bash
-export HWREPO=/fs/atipa/home/015619422/CMPE249-HW2
-export M3D=/home/015619422/mmdetection3d
+export HWREPO=/fs/atipa/home/<student_id>/CMPE249-HW2
+export M3D=/home/<student_id>/mmdetection3d
 export CUDA_VISIBLE_DEVICES=0
 ```
 General command template:
@@ -105,21 +104,21 @@ Executed combinations (logs live in `logs/` and artifacts in `results/`):
 All inference runs used `--max-samples 200` to keep artifact folders manageable while still satisfying the ≥200 frame requirement for the stitched video.
 
 ## Visualization & Media Exports
-1. Install Open3D inside the active conda env (`open3d==0.19.0` is already in the YAML).
+1. Install Open3D locally.
 2. View saved point clouds locally:
 ```bash
 python open3d_view_saved_ply.py \
-  --points results/kitti_3dssd_viz/0_points.ply \
-  --pred   results/kitti_3dssd_viz/0_pred.ply \
-  --blend 0.6
+  --dir results/<*_viz> \
+  --view-json   results/<*_viz>/view.json \
+  --basename <frame#> # e.g., 0 for 0_point.ply and 0_pred.ply
 ```
-3. Combine `_points.ply` and `_pred.ply` inside Open3D to capture screenshots of detections. Store at least four labeled PNGs in `results/screenshots/` (placeholders referenced in `report.md`).
-4. Build the demo video once the PNG frames exist (from `results/*_viz/*.png`):
+3. To get the JSON, run without --view-json first to generate it. Move it around in the pop-up window to get a good view, then press H to see
+   the commands. Usually it will be command/ctrl c to copy the view settings to clipboard. Paste it into a file named view.json
+4. Build the demo video once the PNG frames exist (from `results/*_viz/frame`):
 ```bash
-ffmpeg -framerate 5 -pattern_type glob -i 'results/kitti_3dssd_viz/*.png' \
-  -c:v libx264 -pix_fmt yuv420p results/demo.mp4
+cd results/<*_viz>/frames
+ffmpeg -framerate 7 -i frame_%04d.png -c:v libx264 -pix_fmt yuv420p demo.mp4
 ```
-5. Document every visualization session (camera pose, sample id) so screenshots can be regenerated if needed.
 
 ## Deliverables Checklist
 - `report.md` (setup summary, command references, metrics table, screenshot & video placeholders)
@@ -130,6 +129,5 @@ ffmpeg -framerate 5 -pattern_type glob -i 'results/kitti_3dssd_viz/*.png' \
 ## Troubleshooting Notes
 - NuScenes inference raises `KeyError: 'lidar2img'` when `--save-images` is enabled; rerun with `--no-save-images` or augment the metadata dict in `simple_infer_utils.py` before enabling captures.
 - Reinstalling MMCV from source (instructions above) resolved CUDA 12.6 compatibility issues on HPC1.
-- Always activate the same conda env before launching commands to keep operator kernels (MMCV ops) aligned with PyTorch.
 
-Refer to `report.md` for the latest metrics table and qualitative analysis. Update this README as new datasets, models, or training runs are added.
+Refer to `report.md` for the latest metrics table and qualitative analysis.
