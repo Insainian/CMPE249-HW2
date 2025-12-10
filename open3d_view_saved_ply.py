@@ -20,6 +20,7 @@ import argparse
 import os
 import sys
 import numpy as np
+import json
 
 try:
     import open3d as o3d
@@ -52,6 +53,14 @@ def main():
                         help="Viewer window width (default: 1440)")
     parser.add_argument("--height", type=int, default=900,
                         help="Viewer window height (default: 900)")
+    # MODIFIED: Adding view json argument
+    parser.add_argument(
+        "--view-json",
+        type=str,
+        default=None,
+        help="Path to saved Open3D camera parameters (JSON).",
+    )
+
     args = parser.parse_args()
 
     base_dir = os.path.expanduser(args.dir)
@@ -119,9 +128,46 @@ def main():
     for g in geoms:
         vis.add_geometry(g)
 
+    # MODIFIED: Load view from JSON if provided
+    ctr = vis.get_view_control()
+    if args.view_json is not None and os.path.exists(args.view_json):
+        try:
+            with open(args.view_json, "r") as f:
+                data = json.load(f)
+
+            if data.get("class_name", "") == "ViewTrajectory":
+                traj = data.get("trajectory", [])
+                if len(traj) > 0:
+                    t0 = traj[0]
+                    front = t0.get("front", None)
+                    lookat = t0.get("lookat", None)
+                    up = t0.get("up", None)
+                    zoom = t0.get("zoom", None)
+
+                    if front is not None:
+                        ctr.set_front(front)
+                    if lookat is not None:
+                        ctr.set_lookat(lookat)
+                    if up is not None:
+                        ctr.set_up(up)
+                    if zoom is not None:
+                        ctr.set_zoom(zoom)
+
+                    print(f"[INFO] Applied camera pose from {args.view_json}")
+                else:
+                    print(f"[WARN] {args.view_json} has empty trajectory[]")
+            else:
+                print(f"[WARN] {args.view_json} is not a ViewTrajectory JSON")
+        except Exception as e:
+            print(f"[WARN] Failed to load view JSON {args.view_json}: {e}")
+    else:
+        print("[INFO] No --view-json provided, using default camera view.")
+
     # Render once before capturing
     vis.poll_events()
     vis.update_renderer()
+
+
 
     screenshot_dir = os.path.join(base_dir, "screenshots")
     os.makedirs(screenshot_dir, exist_ok=True)
