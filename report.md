@@ -160,7 +160,7 @@ ffmpeg -framerate 7 -i frame_%04d.png \
   nuscenes_pointpillars_viz.mp4
 ```
 The following is the demo video for NuScenes PointPillars:
-<video src="https://raw.githubusercontent.com/Insainian/CMPE249-HW2/refs/heads/main/results/nuscenes_pointpillars_demo.mp4" controls width="600"></video>
+[nuScenes PointPillars demo](https://raw.githubusercontent.com/Insainian/CMPE249-HW2/refs/heads/main/results/nuscenes_pointpillars_demo.mp4)
 
 
 ## Key Takeaways
